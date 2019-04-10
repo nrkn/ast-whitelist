@@ -1,0 +1,38 @@
+{
+  "name": "ast-whitelist",
+  "version": "0.1.0",
+  "description": "Check an ECMAScript AST node against a whitelist or predicate",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && mocha ./dist/test",
+    "coverage": "tsc && nyc --reporter=html --reporter=text mocha ./dist/test"
+  },
+  "nyc": {
+    "exclude": [
+      "./dist/test"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nrkn/ast-whitelist.git"
+  },
+  "keywords": [],
+  "author": "Nik Coughlin <nrkn.com@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nrkn/ast-whitelist/issues"
+  },
+  "homepage": "https://github.com/nrkn/ast-whitelist#readme",
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.12",
+    "@types/estraverse": "0.0.6",
+    "@types/estree": "0.0.39",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "estraverse": "^4.2.0"
+  }
+}

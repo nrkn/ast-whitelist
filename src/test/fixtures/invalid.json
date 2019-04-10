@@ -1,0 +1,49 @@
+{
+  "type": "VariableDeclaration",
+  "declarations": [
+    {
+      "type": "VariableDeclarator",
+      "id": {
+        "type": "Identifier",
+        "name": "x"
+      },
+      "init": {
+        "type": "ObjectExpression",
+        "properties": [
+          {
+            "type": "Property",
+            "key": {
+              "type": "Identifier",
+              "name": "foo"
+            },
+            "computed": false,
+            "value": {
+              "type": "Literal",
+              "value": "a",
+              "raw": "'a'"
+            },
+            "kind": "init",
+            "method": false,
+            "shorthand": false
+          },
+          {
+            "type": "Property",
+            "key": {
+              "type": "Identifier",
+              "name": "bar"
+            },
+            "computed": false,
+            "value": {
+              "type": "ArrayExpression",
+              "elements": []
+            },
+            "kind": "init",
+            "method": false,
+            "shorthand": false
+          }
+        ]
+      }
+    }
+  ],
+  "kind": "const"
+}
