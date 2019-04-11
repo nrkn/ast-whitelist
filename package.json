@@ -1,6 +1,6 @@
 {
   "name": "ast-whitelist",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Check an ECMAScript AST node against a whitelist or predicate",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
