@@ -51,8 +51,7 @@ const [ first ] = test( node, notMemberExpression, true )
 ```
 
 The predicate you pass also recieves a parent node (`null` if the current node
-is not the root node) and the root node, in case your predicate needs
-some context:
+is the root node) and the root node, in case your predicate needs some context:
 
 ```js
 const predicate = ( node, parent, root ) => {
