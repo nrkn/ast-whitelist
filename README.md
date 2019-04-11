@@ -56,7 +56,8 @@ some context:
 
 ```js
 const predicate = ( node, parent, root ) => {
-  if( parent && parent.type === 'VariableDeclarator' ) return false
+  if( node !== root && parent && parent.type === 'VariableDeclarator' )
+    return false
 
   return true
 }
