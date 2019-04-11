@@ -50,8 +50,9 @@ const unexpectedNodes = test( test, notMemberExpression )
 const [ first ] = test( node, notMemberExpression, true )
 ```
 
-The predicate you pass also recieves a parent node (null if the current node is
-not the root node) and the root node, in case your predicate needs some context:
+The predicate you pass also recieves a parent node (`null` if the current node
+is not the root node) and the root node, in case your predicate needs
+some context:
 
 ```js
 const predicate = ( node, parent, root ) => {
@@ -128,8 +129,9 @@ const [ first ] = testWithReason( node, predicate, true )
 
 if( first ){
   const { reason } = first
+  const { errorType, nodeType } = reason
 
-  throw Error( reason )
+  throw Error( `${ errorType } ${ nodeType }` )
 }
 ```
 
