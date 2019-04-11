@@ -9,23 +9,31 @@ Check an ECMAScript AST node against a whitelist or predicate
 ```js
 const { check } = require( 'ast-whitelist' )
 
+// JSON node types
+const whitelist = [
+  'ObjectExpression', 'ArrayExpression', 'Property', 'Identifier', 'Literal'
+]
+
+// length will be zero if no bad nodes
 const unexpectedNodes = check( node, whitelist )
 
-// or stop after the first bad node
+// or stop after the first bad node - first will be undefined if no bad nodes
 const [ first ] = check( node, whitelist, true )
 ```
 
+Or using import syntax:
 ```js
 import { check } from 'ast-whitelist'
-
-const unexpectedNodes = check( node, whitelist )
-
-// or stop after the first bad node
-const [ first ] = check( node, whitelist, true )
 ```
 
+### typing
+
 ```ts
-( node: Node, whitelist: string[], stopOnFirst?: boolean ) => Node[]
+const check = (
+  node: Node,
+  whitelist: string[],
+  stopOnFirst?: boolean
+) => Node[]
 ```
 
 ## test
@@ -33,27 +41,127 @@ const [ first ] = check( node, whitelist, true )
 ```js
 const { test } = require( 'ast-whitelist' )
 
-const unexpectedNodes = test( test, predicate )
+// ban member expressions
+const notMemberExpression = node => node.type !== 'MemberExpression'
+
+const unexpectedNodes = test( test, notMemberExpression )
 
 // or stop after the first bad node
-const [ first ] = test( node, predicate, true )
+const [ first ] = test( node, notMemberExpression, true )
 ```
+
+The predicate you pass also recieves a parent node (null if the current node is
+not the root node) and the root node, in case your predicate needs some context:
 
 ```js
-import { test } from 'ast-whitelist'
+const predicate = ( node, parent, root ) => {
+  if( parent && parent.type === 'VariableDeclarator' ) return false
 
-const unexpectedNodes = test( node, predicate )
-
-// or stop after the first bad node
-const [ first ] = test( node, predicate, true )
+  return true
+}
 ```
 
-```ts
-( node: Node, predicate: NodePredicate, stopOnFirst?: boolean ) => Node[]
-```
+### typing
 
 ```ts
-type NodePredicate = ( node: Node, parent: Node | null, root: Node ) => boolean
+const test = (
+  node: Node,
+  predicate: NodePredicate,
+  stopOnFirst?: boolean
+) => Node[]
+
+type NodePredicate = (
+  node: Node,
+  parent: Node | null,
+  root: Node
+) => boolean
+```
+
+## testWithReason
+
+Same as test, except instead of returning a boolean from your predicate you
+return either:
+
+```js
+{ valid: true }
+```
+
+Or:
+```js
+{
+  valid: false,
+  reason: 'It was bad'
+}
+```
+
+Instead of returning an array of unexpected nodes, it returns an array of:
+
+```js
+{
+  node: { /*...*/ },
+  reason: '...'
+}
+```
+
+`reason` is a string by default but you can return anything:
+
+```js
+const { testWithReason } = require( 'ast-whitelist' )
+
+const whitelist = [
+  'ObjectExpression', 'ArrayExpression', 'Property', 'Identifier', 'Literal'
+]
+
+const predicate = node => {
+  if( whitelist.includes( node.type ) ) return { valid: true }
+
+  return {
+    valid: false,
+    reason: {
+      errorType: 'Unexpected type',
+      nodeType: node.type
+    }
+  }
+}
+
+const [ first ] = testWithReason( node, predicate, true )
+
+if( first ){
+  const { reason } = first
+
+  throw Error( reason )
+}
+```
+
+### typing
+
+```ts
+const testWithReason  = <T = string>(
+  node: Node,
+  predicate: NodePredicateWithReason<T>,
+  stopOnFirst?: boolean
+) => NodeWithReason<T>[]
+
+interface NodeWithReason<T = string> {
+  node: Node
+  reason: T
+}
+
+type NodePredicateReasonResult<T = string> =
+  NodePredicateReasonValid | NodePredicateReasonInvalid<T>
+
+type NodePredicateReasonValid = {
+  valid: true
+}
+
+type NodePredicateReasonInvalid<T = string> = {
+  valid: false
+  reason: T
+}
+
+type NodePredicateWithReason<T = string> =
+  ( node: Node, parent: Node | null, root: Node ) =>
+    NodePredicateReasonResult<T>
 ```
 
 ## license

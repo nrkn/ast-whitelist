@@ -15,4 +15,21 @@ exports.test = (node, predicate, stopOnFirst = false) => {
     });
     return unexpected;
 };
+exports.testWithReason = (node, predicate, stopOnFirst = false) => {
+    const unexpected = [];
+    estraverse_1.traverse(node, {
+        enter: (current, parent) => {
+            const result = predicate(current, parent, node);
+            if (!result.valid) {
+                unexpected.push({
+                    node: current,
+                    reason: result.reason
+                });
+                if (stopOnFirst)
+                    return estraverse_1.VisitorOption.Break;
+            }
+        }
+    });
+    return unexpected;
+};
 //# sourceMappingURL=index.js.map
