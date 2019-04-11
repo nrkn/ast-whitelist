@@ -81,7 +81,7 @@ type NodePredicate = (
 
 ## testWithReason
 
-Same as test, except instead of returning a boolean from your predicate you
+Same as `test`, except instead of returning a boolean from your predicate you
 return either:
 
 ```js
